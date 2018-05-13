@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>   
+<beans xmlns="http://www.springframework.org/schema/beans"  
+	xmlns:security="http://www.springframework.org/schema/security"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:context="http://www.springframework.org/schema/context"  
+    xmlns:aop="http://www.springframework.org/schema/aop" 
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+    xmlns:jee="http://www.springframework.org/schema/jee" 
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:task="http://www.springframework.org/schema/task"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd   
+           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd   
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd   
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+           http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd  
+    	   http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.2.xsd
+		   http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+		   http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd
+		   http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd"
+           default-lazy-init="true">
+    <!-- 系统管理平台配置参数 -->
+    <!-- sdk配置，原system-sdk-conf.xml中的配置内容
+    	 去除了数据源的配置，改为使用Spring来管理数据源的方式
+     -->
+    <!--bean id="authsystem_sdk_conf" class="java.util.HashMap">
+    	<constructor-arg>
+    		<map>
+    			<entry key="entity-factory-class-name" value="ces.sdk.system.dbfactory.DbEntityFactory"/>
+    			<entry key="facade-factory-class-name" value="com.ces.xarch.plugins.authsystem.facade.XarchSystemFacadeFactory"/>
+    			<entry key="auth-engine-class-name" value="ces.sdk.system.engine.NoCacheAuthEngine"/>
+    		</map>
+    	</constructor-arg>
+    </bean-->
+    
+    <!-- 工作流平台配置参数 -->
+    <!-- WAPI配置，原Coflow.xml中的配置内容
+    	增加了配置项”db-type"用来标识数据库类型（工作流中需要使用）：可用值为：sqlserver和oracle（默认）
+    	 去除了数据源的配置，改为使用Spring来管理数据源的方式
+    	 注：允许进行选择性设置，需要修改属性就只配置对应的键值，没有配置的系统将使用默认配置
+    
+    <bean id="coflow_wapi_conf" class="java.util.HashMap">
+    	<constructor-arg>
+    		<map>
+    			<entry key="db-type" value="oracle"/>
+    			
+    			<entry key="threads" value="10"/>
+    			
+    			<entry key="repository-path" value="../config/Repository.xml"/>
+    			
+    			<entry key="port" value="801"/>
+    			<entry key="autoStart" value="true"/>
+    			
+    			<entry key="AdminAPI" value="ces.workflow.core.api.AdminAPIImpl"/>
+    			<entry key="ClientAPI" value="ces.workflow.core.api.ClientAPIImpl"/>
+    			<entry key="WorkflowEngine" value="ces.workflow.core.engine.runtime.CoflowEngine"/>
+    			<entry key="ApplicationManager" value="ces.workflow.core.application.ApplicationManagerImpl"/>
+    			<entry key="DefineManager" value="ces.workflow.core.define.DefineManagerImpl"/>
+    			<entry key="DefineService" value="ces.workflow.core.define.DefineServiceImpl"/>
+    			<entry key="DefineXmlParser" value="ces.workflow.core.define.DefineXmlParserImpl"/>
+    			<entry key="DefineXmlWriter" value="ces.workflow.core.define.DefineXmlWriterImpl"/>
+    			<entry key="WFOrgAccess" value="ces.workflow.core.org.SDKOrgAdaptor"/>
+    		</map>
+    	</constructor-arg>
+    </bean>
+     -->
+    <!-- 工作流管理服务类 -->
+    <!--  
+    <bean id="coflowServiceU" class="com.ces.xarch.plugins.coflow.service.CoflowServiceImpl" />
+    
+    <bean id="coflowManager" class="com.ces.erp.common.coflow.CoflowManagerImpl" />
+    -->
+    <!-- 系统管理平台管理服务类 -->
+    <bean id="authSystemServer" class="com.ces.authsystem.server.impl.AuthSystemServerImpl" />
+    
+    <!-- jdbcTemplate-->
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+    
+    <!-- 分页查询配置参数 -->
+    <!-- 默认每页记录数 -->
+    <!--bean id="defaultPagesize" class="java.lang.String">
+    	<constructor-arg index="0" value="20"/>
+    </bean-->
+    <!-- 默认当前页号参数名称 -->
+    <!--bean id="defaultPageNumberParam" class="java.lang.String">
+    	<constructor-arg index="0" value="P_pageNumber"/>
+    </bean-->
+    <!-- 默认每页记录数参数名称 -->
+    <!--bean id="defaultPageSizeParam" class="java.lang.String">
+    	<constructor-arg index="0" value="P_pagesize"/>
+    </bean-->
+    <!-- 默认排序参数名称（排序字段,[排序字段,排序方式],[排序字段]） -->
+    <!--bean id="defaultOrderParam" class="java.lang.String">
+    	<constructor-arg index="0" value="P_orders"/>
+    </bean-->
+    
+    <!-- 资源加密过滤器，如果需要对所有信息进行加密请启用该过滤器 -->
+	<!--bean id="SecurityFilterChainProxy" class="com.ces.xarch.core.security.filter.SecurityFilterChainProxy">
+		<property name="useSecurity" value="false" />
+		<property name="accessDeniedFilters">
+			<list>
+			</list>
+		</property>
+		<property name="filters">
+			<list>
+				<ref local="AESFilter"/>
+			</list>
+		</property>
+	</bean>
+	<bean id="AESFilter" class="com.ces.xarch.core.security.filter.AESFilter">
+		<property name="definitionSource">
+			<value>
+				/file/*
+				/image/*
+			</value>
+		</property>
+	</bean-->
+	<bean id="task" class="com.ces.erp.common.SpringJobUtil"></bean>
+  
+	<task:scheduled-tasks>
+		
+		<task:scheduled ref="task" method="reloadData"  		cron="0 0 3 ? * *"></task:scheduled><!-- 每天3:00am执行 重新加载系统数据 -->
+		<task:scheduled ref="task" method="synUserOrg"  		cron="0 0 4 ? * *"></task:scheduled><!-- 每天4:00am同步CesDingtalk(和CESOA用同一个用户库)组织部门和用户到ces阿里钉钉 -->
+		<task:scheduled ref="task" method="downloadImagesToLocal"  		cron="0 0 5 ? * *"></task:scheduled><!-- 每天5:00am下载OA头像至本地 -->
+		<task:scheduled ref="task" method="synUserOrgForQiyeWechat"  		cron="0 0 6 ? * *"></task:scheduled><!-- 每天6:00am同步(和CESOA用同一个用户库)组织部门和用户到ces企业微信 -->
+		<task:scheduled ref="task" method="updateQiyeWechatOrgUserOrder"  		cron="0 40 5 ? * MON,WED,FRI"></task:scheduled><!-- 每周一周三周五5:40am更新ces企业微信组织部门和用户的显示序号 -->
+		<task:scheduled ref="task" method="OASysWechatCheckInData" 		cron="0 01 23 ? * *" ></task:scheduled><!-- 每晚11点执行同步企业微信打卡数据 -->
+	</task:scheduled-tasks>
+	
+</beans>
