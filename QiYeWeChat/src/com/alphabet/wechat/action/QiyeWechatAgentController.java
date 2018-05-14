@@ -2,7 +2,9 @@ package com.alphabet.wechat.action;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -245,6 +247,76 @@ public class QiyeWechatAgentController {
 			e.printStackTrace();
 		}
 		return resultMap;
+	}
+	
+	
+	/**  
+	 * 更新发票状态
+	 * @author yang.lvsen
+	 * @date 2018年5月14日下午2:08:09
+	 * @return Object
+	 */ 
+	public Object updateInvoiceStatus(){
+		//map集合存放前端页面填写的要查询的信息。
+		Map<String,String> map = new HashMap<String,String>();
+		map.put("card_id", "这里填写需要查询的发票ID");	//发票ID
+		map.put("reimburse_status", "INVOICE_REIMBURSE_INIT");	//发报销状态. INVOICE_REIMBURSE_INIT：发票初始状态，未锁定；INVOICE_REIMBURSE_LOCK：发票已锁定，无法重复提交报销;INVOICE_REIMBURSE_CLOSURE:发票已核销，从用户卡包中移除
+		
+		String msg = "";
+		try {
+			msg = InvoiceService.updateInvoiceStatus(map);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return msg;
+	}
+	
+	/**  
+	 * 批量更新发票状态
+	 * @author yang.lvsen
+	 * @date 2018年5月14日下午2:08:09
+	 * @return Object
+	 */ 
+	public Object updateInvoiceStatusBatch(){
+		List<Map<String,String>> dataList = new ArrayList<Map<String,String>>();
+		//map集合存放前端页面填写的要查询的信息。
+		Map<String,String> map = new HashMap<String,String>();
+		map.put("card_id", "这里填写需要查询的发票ID");	//发票ID
+		map.put("encrypt_code", "ENCRYPTCODE");	//发报销状态. INVOICE_REIMBURSE_INIT：发票初始状态，未锁定；INVOICE_REIMBURSE_LOCK：发票已锁定，无法重复提交报销;INVOICE_REIMBURSE_CLOSURE:发票已核销，从用户卡包中移除
+		dataList.add(map);
+		String msg = "";
+		try {
+			msg = InvoiceService.updateInvoiceStatusBatch(dataList, "123", "INVOICE_REIMBURSE_INIT");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return msg;
+	}
+	
+	/**  
+	 * 批量查询电子发票
+	 * @author yang.lvsen
+	 * @date 2018年5月14日下午2:08:09
+	 * @return Object
+	 */ 
+	public Object getInvoiceinfoBatch(){
+		List<Map<String,String>> dataList = new ArrayList<Map<String,String>>();
+		//map集合存放前端页面填写的要查询的信息。
+		Map<String,String> map = new HashMap<String,String>();
+		map.put("card_id", "这里填写需要查询的发票ID");	//发票ID
+		map.put("encrypt_code", "ENCRYPTCODE");	//发报销状态. INVOICE_REIMBURSE_INIT：发票初始状态，未锁定；INVOICE_REIMBURSE_LOCK：发票已锁定，无法重复提交报销;INVOICE_REIMBURSE_CLOSURE:发票已核销，从用户卡包中移除
+		dataList.add(map);
+		
+		List<Map<String,Object>> resultList = new ArrayList<Map<String,Object>>();
+		try {
+			resultList.addAll(InvoiceService.getInvoiceinfoBatch(dataList));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return resultList;
 	}
 	
 

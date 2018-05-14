@@ -759,7 +759,7 @@ public class QiyeWechatOrgUserSynService {
 		Thread.sleep(300);
 		System.out.println("------待删部门：---"+toDelDeptList.size()+"个------");
 		qiyeWechatDelNotExistOrgs(toDelDeptList);
-		System.out.println("=========cesoa--企业微信--通讯录同步--结束===================");
+		System.out.println("=========--企业微信--通讯录同步--结束===================");
 	}
 
 }
