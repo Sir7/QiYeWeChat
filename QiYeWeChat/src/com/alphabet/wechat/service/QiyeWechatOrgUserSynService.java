@@ -744,6 +744,69 @@ public class QiyeWechatOrgUserSynService {
 		DownloadNoImage.downloadNoImageData();
 	}
 	
+	
+	/**  
+	 * 邀请成员
+	 * 企业可通过接口批量邀请成员使用企业微信，邀请后将通过短信或邮件下发通知。须拥有指定成员、部门或标签的查看权限。
+	 * @author yang.lvsen
+	 * @date 2018年5月14日下午5:03:46
+	 * @param list
+	 * @param type
+	 * @return List<String>
+	 */ 
+	public static List<String> InviteMember(List<String> list,String type){
+		/**
+		 * user, party, tag三者不能同时为空；
+		 * 如果部分接收人无权限或不存在，邀请仍然执行，但会返回无效的部分（即invaliduser或invalidparty或invalidtag）;
+		 * 非认证企业每天邀请人数不能超过1000, 认证企业每天邀请人数不能超过5000；
+		 * 同一用户只须邀请一次，被邀请的用户如果未安装企业微信，在3天内每天会收到一次通知，最多持续3天。
+		 * 因为邀请频率是异步检查的，所以调用接口返回成功，并不代表接收者一定能收到邀请消息（可能受上述频率限制无法接收）。
+		 */
+		try {
+			String accessToken = WeChatServer.getToken(ConstantCommon.CorpID, ConstantCommon.CorpSecret);
+			String postUrl = "https://qyapi.weixin.qq.com/cgi-bin/batch/invite?access_token="+accessToken;
+			JSONObject updJsonObj = new JSONObject();
+			if(ErpCommon.isNotNull(type)){
+				if("U".equals(type)){
+					updJsonObj.put("user", list);	//成员ID列表, 最多支持1000个。
+				}else if("P".equals(type)){
+					updJsonObj.put("party", list);	//部门ID列表，最多支持100个。
+				}else{
+					updJsonObj.put("tag", list);	//标签ID列表，最多支持100个。
+				}
+			}
+			String returnMsg = HttpClientUtil.post(postUrl, updJsonObj.toString());
+			JSONObject jsonObj = JSONObject.fromObject(returnMsg);
+			String errcode = jsonObj.getString("errcode")==null?"":jsonObj.getString("errcode").toString();
+			if(ErpCommon.isNotNull(errcode) && "0".equals(errcode)){
+				if(ErpCommon.isNotNull(type)){
+					String param = "";
+					if("U".equals(type)){
+						param = "invaliduser";
+					}else if("P".equals(type)){
+						param = "invalidparty";
+					}else{
+						param = "invalidtag";
+					}
+					JSONArray jsonDataArr = jsonObj.getJSONArray(param);
+					if(jsonDataArr != null && jsonDataArr.size() != 0){
+						List<String> dataList = new ArrayList<String>();
+						for(int i =0; i < jsonDataArr.size();i++){
+							JSONObject data = jsonDataArr.getJSONObject(i);
+							dataList.add(data.toString());
+						}
+						return dataList;
+					}
+				}
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	
 	/**
 	 * 同步组织用户到企业微信
 	 * 同步过程：
