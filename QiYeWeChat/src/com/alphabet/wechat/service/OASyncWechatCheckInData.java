@@ -271,7 +271,6 @@ public class OASyncWechatCheckInData {
 				 */
 				
 			}
-		
 		}
 		return null;
 	}
