@@ -2,6 +2,7 @@ package com.alphabet.wechat.service;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -26,21 +27,25 @@ public class OAuth2Servlet extends HttpServlet{
         response.setCharacterEncoding("UTF-8");   
         PrintWriter out = response.getWriter();  
         String code = request.getParameter("code");   
-        if (!"authdeny".equals(code)) { 
+        if (!"authdeny".equals(code)) {
 			try {
 				String access_token = WeChatServer.getToken(ConstantCommon.CorpID, ConstantCommon.CorpSecret);
 				// agentid 跳转链接时所在的企业应用ID 管理员须拥有agent的使用权限；agentid必须和跳转链接时所在的企业应用ID相同  
-				String UserID = Oauth2Service.GetUserID(access_token, code, "您的agentid");  
-				request.setAttribute("UserID", UserID);  
+				Map<String,String> map = OAuth2Service.getUserInfoByCode(access_token, code);
+				String UserID = null;
+				if(!map.isEmpty()){
+					UserID = map.get("UserId");
+				}
+				request.setAttribute("UserID", UserID); 
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}  
-        } else {  
-        	out.print("授权获取失败，至于为什么，自己找原因。。。");  
-        }  
-        // 跳转到index.jsp  
-        request.getRequestDispatcher("index.jsp").forward(request, response);  
+			}
+        } else {
+        	out.print("授权获取失败，至于为什么，自己找原因。。。");
+        }
+        // 跳转到index.jsp
+        request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 
 }

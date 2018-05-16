@@ -753,7 +753,7 @@ public class QiyeWechatOrgUserSynService {
 	 * @param type
 	 * @return List<String>
 	 */ 
-	public static List<String> InviteMember(List<String> list,String type){
+	public static List<String> inviteMember(List<String> list,String type){
 		/**
 		 * user, party, tag三者不能同时为空；
 		 * 如果部分接收人无权限或不存在，邀请仍然执行，但会返回无效的部分（即invaliduser或invalidparty或invalidtag）;
@@ -796,6 +796,34 @@ public class QiyeWechatOrgUserSynService {
 						}
 						return dataList;
 					}
+				}
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	
+	/** 
+	 * 二次验证
+	 * @author yang.lvsen
+	 * @date 2018年5月16日 下午9:17:59
+	 * @param code	当成员登录企业微信或关注微工作台（原企业号）加入企业时，所传递过来的数据
+	 * @return String
+	 */
+	public static String secondaryValidation(String code){
+		try {
+			String accessToken = WeChatServer.getToken(ConstantCommon.CorpID, ConstantCommon.CorpSecret);
+			Map<String,String> map = OAuth2Service.getUserInfoByCode(accessToken, code);
+			if(!map.isEmpty()){
+				String postUrl = "https://qyapi.weixin.qq.com/cgi-bin/user/authsucc?access_token="+accessToken+"&userid="+map.get("userId");
+				String returnMsg = HttpClientUtil.post(postUrl, null);
+				JSONObject jsonObj = JSONObject.fromObject(returnMsg);
+				String errcode = jsonObj.getString("errcode")==null?"":jsonObj.getString("errcode").toString();
+				if(ErpCommon.isNotNull(errcode) && "0".equals(errcode)){
+					return "0";
 				}
 			}
 		} catch (Exception e) {
