@@ -13,7 +13,6 @@ import com.alphabet.common.service.CommonService;
 /**
  * erp公共类
  * 
- * @author sgl
  * @date 2013-9-23 下午4:08:02
  */
 public class ErpCommon {

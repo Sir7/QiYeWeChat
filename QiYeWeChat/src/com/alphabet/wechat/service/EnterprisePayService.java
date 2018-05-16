@@ -9,7 +9,6 @@ import java.util.UUID;
 
 import com.alphabet.common.ConstantCommon;
 import com.alphabet.common.ErpCommon;
-import com.alphabet.wechat.common.UploadAndDownloadMedia;
 import com.alphabet.wechat.common.WeChatServer;
 import com.alphabet.wechat.wxpay.WXPayConstants;
 import com.alphabet.wechat.wxpay.WXPayConstants.Check;
@@ -86,7 +85,7 @@ public class EnterprisePayService {
 		long agentid = Long.parseLong(WXPayConstants.redPacketAgentId);	//以企业应用的名义发红包.企业应用id，整型。与sender_name互斥，二者只能填一个。选填
 		String accessToken = WeChatServer.getToken(ConstantCommon.CorpID, WXPayConstants.redPacketSecret);
 		String mediaFileUrl = "";	//头像图片在本地的路径
-		String mediaId = UploadAndDownloadMedia.uploadMedia(accessToken, "image", mediaFileUrl);
+		String mediaId = MaterialManagementService.uploadMedia(accessToken, "image", mediaFileUrl);
 		String sender_header_media_id = mediaId;		//发送者头像。发送者头像素材id，通过企业微信开放上传素材接口获取，获取临时素材。选填
 		String openid = WeChatServer.UserIdAndOpenIdConversion(ConstantCommon.CorpID, WXPayConstants.redPacketSecret, "这里填写需要接收人的userid", "U");
 		String re_openid = openid;	//用户openid。接受红包的用户.用户在wxappid下的openid。必填

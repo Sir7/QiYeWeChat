@@ -20,7 +20,6 @@ import org.xml.sax.SAXException;
 
 import com.aes.AesException;
 import com.aes.WXBizMsgCrypt;
-import com.alphabet.wechat.common.UploadAndDownloadMedia;
 import com.alphabet.wechat.common.WeChatServer;
 import com.alphabet.wechat.util.PropertyUtil;
 
@@ -159,20 +158,20 @@ public class WeChatSendMsgToSystem {
 				String picUrl = picUrlList.item(0).getTextContent();
 				NodeList MediaIdList = root.getElementsByTagName("MediaId");	//图片媒体id
 				String mediaId = MediaIdList.item(0).getTextContent();
-				String filePath = UploadAndDownloadMedia.downloadMedia(getToken(), mediaId, downloadLocal);	//下载下来的媒体文件保存路径
+				String filePath = MaterialManagementService.downloadMedia(getToken(), mediaId, downloadLocal,null);	//下载下来的媒体文件保存路径
 			}else if("voice".equals(msgType)){		//语音信息
 				NodeList mediaIdList = root.getElementsByTagName("MediaId");	//语音媒体id
 				String mediaId = mediaIdList.item(0).getTextContent();
-				String filePath = UploadAndDownloadMedia.downloadMedia(getToken(), mediaId, downloadLocal);	//下载下来的媒体文件保存路径
+				String filePath = MaterialManagementService.downloadMedia(getToken(), mediaId, downloadLocal,"HD");	//下载下来的媒体文件保存路径
 				NodeList formatList = root.getElementsByTagName("Format");	//语音格式
 				String format = formatList.item(0).getTextContent();
 			}else if("video".equals(msgType)){		//视频信息
 				NodeList mediaIdList = root.getElementsByTagName("MediaId");	//视频媒体id
 				String mediaId = mediaIdList.item(0).getTextContent();
-				String filePath = UploadAndDownloadMedia.downloadMedia(getToken(), mediaId, downloadLocal);	//下载下来的媒体文件保存路径
+				String filePath = MaterialManagementService.downloadMedia(getToken(), mediaId, downloadLocal,null);	//下载下来的媒体文件保存路径
 				NodeList thumbMediaIdList = root.getElementsByTagName("ThumbMediaId");	//视频媒体缩略图id
 				String thumbMediaId = thumbMediaIdList.item(0).getTextContent();
-				String filePath2 = UploadAndDownloadMedia.downloadMedia(getToken(), thumbMediaId, downloadLocal);	//下载下来的媒体文件保存路径
+				String filePath2 = MaterialManagementService.downloadMedia(getToken(), thumbMediaId, downloadLocal,null);	//下载下来的媒体文件保存路径
 			}else if("location".equals(msgType)){		//位置信息
 				NodeList location_XList = root.getElementsByTagName("Location_X");	//纬度
 				String location_X = location_XList.item(0).getTextContent();

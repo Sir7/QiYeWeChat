@@ -8,7 +8,6 @@ import com.aes.AesException;
 import com.aes.WXBizMsgCrypt;
 import com.alphabet.common.ErpCommon;
 import com.alphabet.wechat.common.HttpClientUtil;
-import com.alphabet.wechat.common.UploadAndDownloadMedia;
 import com.alphabet.wechat.common.WeChatServer;
 
 import net.sf.json.JSONObject;
@@ -58,11 +57,11 @@ public class SystemSendMsgToWeChat {
 				updJsonObj.put("content", "这是一条测试信息，收到请忽略！\n测试该链接<a href=\"www.baidu.com\">点我试试<a/>");	//消息类型。必填
 			}else if("image".equals(msgtype) || "voice".equals(msgtype) || "file".equals(msgtype)){		//图片信息/语音信息/文件信息
 				//要先获取临时素材
-				String mediaId = UploadAndDownloadMedia.uploadMedia(accessToken, msgtype, "文件所在的路径");
+				String mediaId = MaterialManagementService.uploadMedia(accessToken, msgtype, "文件所在的路径");
 				updJsonObj.put("media_id", mediaId);
 			}else if("video".equals(msgtype)){		//视频信息
 				//要先获取临时素材
-				String mediaId = UploadAndDownloadMedia.uploadMedia(accessToken, msgtype, "文件所在的路径");
+				String mediaId = MaterialManagementService.uploadMedia(accessToken, msgtype, "文件所在的路径");
 				updJsonObj.put("media_id", mediaId);
 				updJsonObj.put("title", list.get(0).get("title").toString());
 				updJsonObj.put("description", list.get(0).get("description").toString());

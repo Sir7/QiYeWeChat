@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.alphabet.common.ErpCommon;
+import com.alphabet.wechat.service.ApplicationManagementService;
 import com.alphabet.wechat.service.EnterprisePayService;
 import com.alphabet.wechat.service.InvoiceService;
 import com.alphabet.wechat.service.OASyncWechatCheckInData;
@@ -23,6 +24,12 @@ import com.alphabet.wechat.service.WeChatSendMsgToSystem;
  * @author yang.lvsen
  * @date 2016年5月11日 下午2:54:13 
  *  
+ */
+/** 
+ * @Title: QiyeWechatAgentController
+ * @Description: 
+ * @author yang.lvsen
+ * @date 2018年5月16日 下午2:30:11
  */
 public class QiyeWechatAgentController {
 	
@@ -319,5 +326,72 @@ public class QiyeWechatAgentController {
 		return resultList;
 	}
 	
+	/**  
+	 * 获取应用
+	 * @author yang.lvsen
+	 * @date 2018年5月16日下午2:29:00
+	 * @return Object
+	 */ 
+	public Object getApplicationInfo(){
+		Map<String,Object> resultMap = ApplicationManagementService.getApplicationInfo("应用id");
+		return resultMap;
+	}
+	
+	
+	/**  
+	 * 设置应用
+	 * @author yang.lvsen
+	 * @date 2018年5月16日下午2:30:13
+	 * @return Object
+	 */ 
+	public static Object setApplication(){
+		String result = ApplicationManagementService.setApplication("应用id");
+		return result;
+	}
+	
+	/**  
+	 * 获取应用列表
+	 * @author yang.lvsen
+	 * @date 2018年5月16日下午2:31:49
+	 * @return Object
+	 */ 
+	public static Object getApplicationList(){
+		List<Map<String,Object>> resultList = ApplicationManagementService.getApplicationList();
+		return resultList;
+	}
 
+	/**  
+	 * 创建菜单
+	 * @author yang.lvsen
+	 * @date 2018年5月16日下午2:32:52
+	 * @return Object
+	 */ 
+	public static Object createMenu(){
+		String result = ApplicationManagementService.createMenu("应用id");
+		return result;
+	}
+	
+	/**  
+	 * 获取菜单
+	 * @author yang.lvsen
+	 * @date 2018年5月16日下午2:33:58
+	 * @return Object
+	 */ 
+	public static Object getMenu(){
+		List<Map<String,Object>> resultList = ApplicationManagementService.getMenu("应用id");
+		return resultList;
+	}
+	
+	/**  
+	 * 删除菜单
+	 * @author yang.lvsen
+	 * @date 2018年5月16日下午2:34:48
+	 * @return Object
+	 */ 
+	public static Object deleteMenu(){
+		String result = ApplicationManagementService.deleteMenu("应用id");
+		return result;
+	}
+	
+	
 }

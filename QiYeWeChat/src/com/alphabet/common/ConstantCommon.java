@@ -39,6 +39,8 @@ public interface ConstantCommon {
 	public static final String CheckCorpSecret = "YpOTw2jkZvTUO9ckoDB36xuFFTN4Fvp8_5VmZvUQFso";
 	//自建应用群聊密钥
 	public static final String GroupChatSecret = "_d5_ktgj2UFwXndJXMiRCua8D3iIknVmmMsHAZ1j2HU";
+	//外部联系人密钥
+	public static final String ExternalContactSecret = "SGL2DIKcorCsI-Mul3BrYg_QuuAaIROtB3OY2jELohU";
 	
 	
 }

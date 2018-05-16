@@ -8,7 +8,6 @@ import java.util.Map;
 import com.alphabet.common.ConstantCommon;
 import com.alphabet.common.ErpCommon;
 import com.alphabet.wechat.common.HttpClientUtil;
-import com.alphabet.wechat.common.UploadAndDownloadMedia;
 import com.alphabet.wechat.common.WeChatServer;
 
 import net.sf.json.JSONArray;
@@ -20,7 +19,7 @@ import net.sf.json.JSONObject;
  * @author yang.lvsen
  * @date 2018年5月14日 下午5:10:18
  */
-public class ApplicationManageService {
+public class ApplicationManagementService {
 	
 	/**  
 	 * 获取应用
@@ -105,7 +104,7 @@ public class ApplicationManageService {
 			JSONObject updJsonObj = new JSONObject();
 			updJsonObj.put("agentid", agentId);	//获取全部打卡类型
 			updJsonObj.put("report_location_flag", "0");
-			String mediaId = UploadAndDownloadMedia.uploadMedia(accessToken, "image", "图片在本地的路径");
+			String mediaId = MaterialManagementService.uploadMedia(accessToken, "image", "图片在本地的路径");
 			updJsonObj.put("logo_mediaid", mediaId);
 			if(!resultMap.isEmpty()){
 				updJsonObj.put("name", resultMap.get("name") == null ? "" : resultMap.get("name").toString());
@@ -163,11 +162,166 @@ public class ApplicationManageService {
 	}
 	
 	
-	public static String customMenu(){
-		
-		
-		
+	/**  
+	 * 创建菜单
+	 * 仅企业可调用；第三方不可调用。
+	 * @author yang.lvsen
+	 * @date 2018年5月16日下午2:18:49
+	 * @param agentId	//应用id
+	 * @return String
+	 */ 
+	public static String createMenu(String agentId){
+		try {
+			String accessToken = WeChatServer.getToken(ConstantCommon.CorpID, ConstantCommon.CorpSecret);
+			String postUrl = "https://qyapi.weixin.qq.com/cgi-bin/menu/create?access_token="+accessToken+"&agentid="+agentId;
+			List<Map<String,Object>> dataList = new ArrayList<Map<String,Object>>();
+			Map<String,Object> clickMap = new HashMap<String,Object>();
+			clickMap.put("type", "click");
+			clickMap.put("name", "今日歌曲");
+			clickMap.put("key", "V1001_TODAY_MUSIC");//click等点击类型必须,菜单KEY值，用于消息接口推送，不超过128字节
+			dataList.add(clickMap);
+			
+			Map<String,Object> subBtnMap = new HashMap<String,Object>();
+			subBtnMap.put("name", "菜单");
+			List<Map<String,Object>> subBtnList = new ArrayList<Map<String,Object>>();
+			Map<String,Object> subBtnViewMap = new HashMap<String,Object>();	//视图集合
+			subBtnViewMap.put("type", "view");
+			subBtnViewMap.put("name", "搜索");
+			subBtnViewMap.put("url", "http://www.soso.com/");	//view类型必须,网页链接，成员点击菜单可打开链接，不超过1024字节
+			subBtnList.add(subBtnViewMap);
+			Map<String,Object> subBtnClick = new HashMap<String,Object>();	//点击事件集合
+			subBtnClick.put("type", "click");
+			subBtnClick.put("type", "赞一下我们");
+			subBtnClick.put("type", "V1001_GOOD");
+			subBtnList.add(subBtnClick);
+			subBtnMap.put("sub_button", subBtnList);//二级菜单数组，个数应为1~5个
+			dataList.add(subBtnMap);
+			
+			Map<String,Object> subBtnMap2 = new HashMap<String,Object>();	//扫码集合
+			subBtnMap2.put("name", "扫码");
+			List<Map<String,Object>> subBtnList2 = new ArrayList<Map<String,Object>>();
+			Map<String,Object> subBtnScancodeWaitmsgMap = new HashMap<String,Object>();	//扫码带提示集合
+			subBtnScancodeWaitmsgMap.put("type", "scancode_waitmsg");
+			subBtnScancodeWaitmsgMap.put("name", "扫码带提示");
+			subBtnScancodeWaitmsgMap.put("key", "rselfmenu_0_0");
+			List<String> scancodeWaitmsgList = new ArrayList<String>();
+			subBtnScancodeWaitmsgMap.put("sub_button", scancodeWaitmsgList);
+			subBtnList2.add(subBtnScancodeWaitmsgMap);
+			Map<String,Object> subBtnScancodePushMap = new HashMap<String,Object>();	//扫码推事件集合
+			subBtnScancodePushMap.put("type", "scancode_push");
+			subBtnScancodePushMap.put("name", "扫码推事件");
+			subBtnScancodePushMap.put("key", "rselfmenu_0_1");
+			subBtnScancodePushMap.put("type", "scancode_push");
+			List<String> scancodePushList = new ArrayList<String>();
+			subBtnScancodePushMap.put("sub_button", scancodePushList);
+			subBtnMap2.put("sub_button", subBtnList2);
+			dataList.add(subBtnMap2);
+			
+			
+			Map<String,Object> subBtnMap3 = new HashMap<String,Object>();
+			subBtnMap3.put("name", "发图");
+			List<Map<String,Object>> subBtnList3 = new ArrayList<Map<String,Object>>();
+			Map<String,Object> picSysphotoMap = new HashMap<String,Object>();	//系统拍照发图集合
+			picSysphotoMap.put("type", "pic_sysphoto");
+			picSysphotoMap.put("name", "系统拍照发图");
+			picSysphotoMap.put("key", "rselfmenu_1_0");
+			List<String> picSysphotoList = new ArrayList<String>();
+			picSysphotoMap.put("sub_button", picSysphotoList);
+			subBtnList3.add(picSysphotoMap);
+			Map<String,Object> picPhotoOrAlbumMap = new HashMap<String,Object>();	//拍照或者相册发图集合
+			picPhotoOrAlbumMap.put("type", "pic_photo_or_album");
+			picPhotoOrAlbumMap.put("name", "拍照或者相册发图");
+			picPhotoOrAlbumMap.put("key", "rselfmenu_1_1");
+			List<String> picPhotoOrAlbumList = new ArrayList<String>();
+			picPhotoOrAlbumMap.put("sub_button", picPhotoOrAlbumList);
+			subBtnList3.add(picPhotoOrAlbumMap);
+			Map<String,Object> picWeiXinMap = new HashMap<String,Object>();	//微信相册发图集合
+			picWeiXinMap.put("type", "pic_weixin");
+			picWeiXinMap.put("name", "微信相册发图");
+			picWeiXinMap.put("key", "rselfmenu_1_2");
+			List<String> picWeiXinList = new ArrayList<String>();
+			picWeiXinMap.put("sub_button", picWeiXinList);
+			subBtnList3.add(picWeiXinMap);
+			subBtnMap3.put("sub_button", subBtnList3);
+			dataList.add(subBtnMap3);
+			
+			
+			Map<String,Object> subBtnMap4 = new HashMap<String,Object>();
+			subBtnMap4.put("name", "发送位置");
+			subBtnMap4.put("type", "location_select");
+			subBtnMap4.put("key", "rselfmenu_2_0");
+			dataList.add(subBtnMap4);
+			
+			
+			JSONObject updJsonObj = new JSONObject();
+			updJsonObj.put("button", dataList);//一级菜单数组，个数应为1~3个
+			String returnMsg = HttpClientUtil.post(postUrl, updJsonObj.toString());
+			JSONObject jsonObj = JSONObject.fromObject(returnMsg);
+			String errcode = jsonObj.getString("errcode")==null?"":jsonObj.getString("errcode").toString();
+			if(ErpCommon.isNotNull(errcode) && "0".equals(errcode)){
+				return "0";
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
 	}
+	
+	
+	/**  
+	 * 获取菜单
+	 * @author yang.lvsen
+	 * @date 2018年5月16日下午2:23:55
+	 * @param agentId	应用id
+	 * @return List<Map<String,Object>>
+	 */ 
+	public static List<Map<String,Object>> getMenu(String agentId){
+		try {
+			String accessToken = WeChatServer.getToken(ConstantCommon.CorpID, ConstantCommon.CorpSecret);
+			String postUrl = "https://qyapi.weixin.qq.com/cgi-bin/menu/get?access_token="+accessToken+"&agentid="+agentId;
+			String returnMsg = HttpClientUtil.post(postUrl, null);
+			JSONObject jsonObj = JSONObject.fromObject(returnMsg);
+			String errcode = jsonObj.getString("errcode")==null?"":jsonObj.getString("errcode").toString();
+			if(ErpCommon.isNotNull(errcode) && "0".equals(errcode)){
+				/**
+				 * 数据的获取参照上面的菜单创建，反过来获取。
+				 */
+				
+				
+				
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	
+	/**  
+	 * 删除菜单
+	 * @author yang.lvsen
+	 * @date 2018年5月16日下午2:25:41
+	 * @param agentId	应用id
+	 * @return String
+	 */ 
+	public static String deleteMenu(String agentId){
+		try {
+			String accessToken = WeChatServer.getToken(ConstantCommon.CorpID, ConstantCommon.CorpSecret);
+			String postUrl = "https://qyapi.weixin.qq.com/cgi-bin/menu/delete?access_token="+accessToken+"&agentid="+agentId;
+			String returnMsg = HttpClientUtil.post(postUrl, null);
+			JSONObject jsonObj = JSONObject.fromObject(returnMsg);
+			String errcode = jsonObj.getString("errcode")==null?"":jsonObj.getString("errcode").toString();
+			if(ErpCommon.isNotNull(errcode) && "0".equals(errcode)){
+				return "0";
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 
 }

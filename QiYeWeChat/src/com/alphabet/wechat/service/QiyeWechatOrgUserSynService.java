@@ -11,7 +11,6 @@ import com.alphabet.authsystem.entity.UserEntity;
 import com.alphabet.common.ConstantCommon;
 import com.alphabet.common.ErpCommon;
 import com.alphabet.wechat.common.HttpClientUtil;
-import com.alphabet.wechat.common.UploadAndDownloadMedia;
 import com.alphabet.wechat.common.WeChatServer;
 import com.alphabet.wechat.entity.WechatDepartment;
 import com.alphabet.wechat.entity.WechatUser;
@@ -553,7 +552,7 @@ public class QiyeWechatOrgUserSynService {
 	}
 	//获取临时素材
 	public static String getMediaId(String accessToken,String type,String urlPath){
-		String mediaId = UploadAndDownloadMedia.uploadMedia(accessToken, type, urlPath);
+		String mediaId = MaterialManagementService.uploadMedia(accessToken, type, urlPath);
 		if(mediaId != null){
 			return mediaId;
 		}
