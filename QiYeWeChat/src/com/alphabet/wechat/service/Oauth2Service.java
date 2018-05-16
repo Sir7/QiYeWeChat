@@ -14,7 +14,7 @@ import net.sf.json.JSONObject;
  * @author yang.lvsen
  * @date 2018年5月16日 下午5:24:59
  */
-public class GOauth2Core {
+public class Oauth2Service {
 	
     /** 
      * 企业获取code地址处理 

@@ -30,7 +30,7 @@ public class OAuth2Servlet extends HttpServlet{
 			try {
 				String access_token = WeChatServer.getToken(ConstantCommon.CorpID, ConstantCommon.CorpSecret);
 				// agentid 跳转链接时所在的企业应用ID 管理员须拥有agent的使用权限；agentid必须和跳转链接时所在的企业应用ID相同  
-				String UserID = GOauth2Core.GetUserID(access_token, code, "您的agentid");  
+				String UserID = Oauth2Service.GetUserID(access_token, code, "您的agentid");  
 				request.setAttribute("UserID", UserID);  
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
