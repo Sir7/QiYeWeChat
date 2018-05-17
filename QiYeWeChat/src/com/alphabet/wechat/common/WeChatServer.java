@@ -73,6 +73,7 @@ public class WeChatServer {
 	public static String UserIdAndOpenIdConversion(String corpId,String corpSecret,String id,String Type) throws Exception{
 		String accessToken = getToken(corpId, corpSecret);
 		String postUrl = "";
+		String result = "";
 		JSONObject updJsonObj = new JSONObject();
 		if(ErpCommon.isNotNull(Type)){
 			if("U".equals(Type)){	//传递的参数是userid，求openid
@@ -88,16 +89,16 @@ public class WeChatServer {
 		String errcode = jsonObj.getString("errcode") == null ? "" : jsonObj.getString("errcode").toString();
 		if("0".equals(errcode)){
 			if(ErpCommon.isNotNull(Type)){
-				if("userId".equals(Type)){
-					String openid = jsonObj.getString("openid") == null ? "" : jsonObj.getString("openid").toString();
-					return openid;
-				}else if("openId".equals(Type)){
-					String userid = jsonObj.getString("userid") == null ? "" : jsonObj.getString("userid").toString();
-					return userid;
+				if("U".equals(Type)){
+					result = jsonObj.getString("openid") == null ? "" : jsonObj.getString("openid").toString();
+				}else if("O".equals(Type)){
+					result = jsonObj.getString("userid") == null ? "" : jsonObj.getString("userid").toString();
 				}
 			}
+		}else{
+			System.out.println("-------转换失败---失败原因："+jsonObj.getString("errmsg"));
 		}
-		return null;
+		return result;
 	}
 
 	

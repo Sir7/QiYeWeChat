@@ -72,7 +72,7 @@ public class OASyncWechatCheckInData {
 			System.out.println("------------企业微信--同步打卡记录--结束--------------");
 			return flag;
 		}
-		return "";
+		return null;
 	}
 	
 	//获取打卡记录
